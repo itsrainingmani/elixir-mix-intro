@@ -41,15 +41,21 @@ defmodule KV.Registry do
     {:ok, {names, refs}}
   end
 
+  @doc """
+  Sync Op to handle lookup of bucket name
+  """
   def handle_call({:lookup, name}, _from, {names, _} = state) do
     {:reply, Map.fetch(names, name), state}
   end
 
+  @doc """
+  Async Op to handle bucket creation
+  """
   def handle_cast({:create, name}, {names, refs}) do
     if Map.has_key?(names, name) do
       {:noreply, {names, refs}}
     else
-      {:ok, pid} = KV.Bucket.start_link([])
+      {:ok, pid} = DynamicSupervisor.start_child(KV.BucketSupervisor, KV.Bucket)
       ref = Process.monitor(pid)
       refs = Map.put(refs, ref, name)
       names = Map.put(names, name, pid)
