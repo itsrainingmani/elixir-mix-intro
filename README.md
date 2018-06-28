@@ -1,6 +1,10 @@
 # KV
 
-**TODO: Add description**
+## Description
+
+Sample Elixir distributed key-value store application with its own supervision tree, configuration, tests etc.
+
+[Source](https://elixir-lang.org/getting-started/mix-otp/introduction-to-mix.html)
 
 ## Installation
 
